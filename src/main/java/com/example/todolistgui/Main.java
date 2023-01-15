@@ -155,4 +155,3 @@ public class Main extends Application {
         launch();
     }
 }
-// hej ahmed!
