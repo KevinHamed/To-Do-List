@@ -164,7 +164,6 @@ public class Main extends Application {
                     String task = checkBox.getText();
                     String priority = task.substring(task.indexOf("Priority:")+10);
                     boolean isCompleted = checkBox.isSelected();
-                    boolean dueToday = false;
                     if (selectedFilter.equals("All")) {
                         checkBox.setVisible(true);
                     } else if (selectedFilter.equals("High Priority") && priority.equals("High")) {
@@ -174,8 +173,6 @@ public class Main extends Application {
                     } else if (selectedFilter.equals("Low Priority") && priority.equals("Low")) {
                         checkBox.setVisible(true);
                     } else if (selectedFilter.equals("Completed") && isCompleted) {
-                        checkBox.setVisible(true);
-                    } else if (selectedFilter.equals("Due Today") && dueToday) {
                         checkBox.setVisible(true);
                     } else {
                         checkBox.setVisible(false);
