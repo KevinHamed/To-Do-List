@@ -37,6 +37,13 @@ public class Main extends Application {
         priorityComboBox.setItems(FXCollections.observableArrayList("High", "Medium", "Low"));
         priorityComboBox.setPromptText("Priority");
 
+        HBox filterContainer = new HBox();
+
+        ComboBox<String> filterComboBox = new ComboBox<>();
+        filterComboBox.setItems(FXCollections.observableArrayList("All", "High Priority", "Medium Priority", "Low Priority", 
+        "Completed"));
+        filterComboBox.setPromptText("Filter By");
+
         // Button to add
         Button addButton = new Button("Add Task");
         // action handler for addbutton
@@ -114,7 +121,7 @@ public class Main extends Application {
         });
 
         Button sortButton = new Button("Sort by Priority");
-        sortButton.setOnAction(event -> {
+        sortButton.setOnAction(actionEvent -> {
             ObservableList<HBox> items = taskList.getItems();
             items.sort((o1, o2) -> {
                 CheckBox cb1 = (CheckBox) o1.getChildren().get(0);
@@ -135,12 +142,53 @@ public class Main extends Application {
             });
         });
 
+        Button clearButton = new Button("Clear completed tasks");
+        clearButton.setOnAction(actionEvent -> {
+            ObservableList<HBox> items = taskList.getItems();
+            for (int i = items.size() - 1; i >= 0; i--) {
+                HBox hBox = items.get(i);
+                CheckBox checkBox = (CheckBox) hBox.getChildren().get(0);
+                if (checkBox.isSelected()) {
+                    items.remove(i);
+                }
+            }
+        });
+
+        filterComboBox.setOnAction(event -> {
+            String selectedFilter = filterComboBox.getValue();
+            if (selectedFilter != null) {
+                ObservableList<HBox> items = taskList.getItems();
+                for (int i = items.size() - 1; i >= 0; i--) {
+                    HBox hBox = items.get(i);
+                    CheckBox checkBox = (CheckBox) hBox.getChildren().get(0);
+                    String task = checkBox.getText();
+                    String priority = task.substring(task.indexOf("Priority:")+10);
+                    boolean isCompleted = checkBox.isSelected();
+                    if (selectedFilter.equals("All")) {
+                        checkBox.setVisible(true);
+                    } else if (selectedFilter.equals("High Priority") && priority.equals("High")) {
+                        checkBox.setVisible(true);
+                    } else if (selectedFilter.equals("Medium Priority") && priority.equals("Medium")) {
+                        checkBox.setVisible(true);
+                    } else if (selectedFilter.equals("Low Priority") && priority.equals("Low")) {
+                        checkBox.setVisible(true);
+                    } else if (selectedFilter.equals("Completed") && isCompleted) {
+                        checkBox.setVisible(true);
+                    } else {
+                        checkBox.setVisible(false);
+                    }
+                }
+            }
+        });
+
         HBox inputBox = new HBox();
         inputBox.setSpacing(10);
         inputBox.getChildren().addAll(textField, priorityComboBox);
         HBox buttonBox = new HBox();
         buttonBox.setSpacing(10);
-        buttonBox.getChildren().addAll(addButton, removeButton, sortButton, editButton);
+        buttonBox.getChildren().addAll(addButton, removeButton, sortButton, editButton, clearButton, filterContainer);
+        filterContainer.getChildren().addAll(filterComboBox);
+
         root.setPadding(new Insets(10));
         root.setSpacing(10);
         root.getChildren().addAll(inputBox, dueDatePicker, taskList, buttonBox);
