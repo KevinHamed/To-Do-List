@@ -38,7 +38,6 @@ public class Main extends Application {
         priorityComboBox.setPromptText("Priority");
 
         HBox filterContainer = new HBox();
-
         ComboBox<String> filterComboBox = new ComboBox<>();
         filterComboBox.setItems(FXCollections.observableArrayList("All", "High Priority", "Medium Priority", "Low Priority", 
         "Completed"));
@@ -78,10 +77,15 @@ public class Main extends Application {
 
             String selectedTask = selectedCheckBox.getText();
             String selectedPriority = "";
-            if(selectedTask.contains("High")) selectedPriority = "High";
-            else if(selectedTask.contains("Medium")) selectedPriority = "Medium";
-            else if(selectedTask.contains("Low")) selectedPriority = "Low";
-
+            if(selectedTask.contains("High")) {
+                selectedPriority = "High";
+            }
+            else if(selectedTask.contains("Medium")) {
+                selectedPriority = "Medium";
+            }
+            else if(selectedTask.contains("Low")) {
+                selectedPriority = "Low";
+            }
             int selectedIndex = taskList.getSelectionModel().getSelectedIndex();
             taskList.getItems().remove(selectedHBox);
             
