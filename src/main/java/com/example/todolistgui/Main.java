@@ -49,16 +49,25 @@ public class Main extends Application {
         addButton.setOnAction(actionEvent -> {
             LocalDate dueDate = dueDatePicker.getValue();
             String priority = priorityComboBox.getValue();
-            String task = textField.getText() + " - Due: " + dueDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " - Priority: " + priority;
-            CheckBox checkBox = new CheckBox();
-            checkBox.setSelected(false);
-            checkBox.setText(task);
-            HBox hBox = new HBox();
-            hBox.getChildren().addAll(checkBox);
-            taskList.getItems().add(hBox);
-            textField.clear();
-            dueDatePicker.setValue(null);
-            priorityComboBox.setValue(null);
+            String task = textField.getText();
+            if (task.isEmpty() || dueDate == null || priority == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Missing Input");
+                alert.setContentText("Please enter a task, select a due date, and select a priority before adding a task.");
+                alert.showAndWait();
+            } else {
+                String taskString = task + " - Due: " + dueDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " - Priority: " + priority;
+                CheckBox checkBox = new CheckBox();
+                checkBox.setSelected(false);
+                checkBox.setText(taskString);
+                HBox hBox = new HBox();
+                hBox.getChildren().addAll(checkBox);
+                taskList.getItems().add(hBox);
+                textField.clear();
+                dueDatePicker.setValue(null);
+                priorityComboBox.setPromptText("Priority");
+            }
         });
 
         // Button to remove
