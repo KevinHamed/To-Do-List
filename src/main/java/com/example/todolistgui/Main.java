@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 public class Main extends Application {
     @Override
@@ -194,12 +195,30 @@ public class Main extends Application {
             }
         });
 
+        Button sortDueDateButton = new Button("Sort by Due Date");
+        sortDueDateButton.setOnAction(actionEvent -> {
+            ObservableList<HBox> taskListItems = taskList.getItems();
+            Collections.sort(taskListItems, (task1, task2) -> {
+                CheckBox task1CheckBox = (CheckBox) task1.getChildren().get(0);
+                String task1DueDateString = task1CheckBox.getText().split("Due: ")[1].split(" -")[0];
+                LocalDate task1DueDate = LocalDate.parse(task1DueDateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                
+                CheckBox task2CheckBox = (CheckBox) task2.getChildren().get(0);
+                String task2DueDateString = task2CheckBox.getText().split("Due: ")[1].split(" -")[0];
+                LocalDate task2DueDate = LocalDate.parse(task2DueDateString, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                
+                return task1DueDate.compareTo(task2DueDate);
+            });
+            taskList.setItems(taskListItems);
+        });
+        
+
         HBox inputBox = new HBox();
         inputBox.setSpacing(10);
         inputBox.getChildren().addAll(textField, priorityComboBox);
         HBox buttonBox = new HBox();
         buttonBox.setSpacing(10);
-        buttonBox.getChildren().addAll(addButton, removeButton, sortButton, editButton, clearButton, filterContainer);
+        buttonBox.getChildren().addAll(addButton, removeButton, sortButton, sortDueDateButton, editButton, clearButton, filterContainer);
         filterContainer.getChildren().addAll(filterComboBox);
 
         root.setPadding(new Insets(10));
